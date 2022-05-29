@@ -1,3 +1,5 @@
+// calling all package / pathing / app connections 
+
 const express = require('express');
 const mongoose = require('mongoose');
 

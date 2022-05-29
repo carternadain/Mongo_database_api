@@ -1,3 +1,4 @@
+//calling expres router
 const router = require("express").Router();
 const {
   getAllUser,
@@ -10,6 +11,8 @@ const {
   
 } = require("../../controllers/user-controller");
 
+
+// geting all user delete/remove friend
 
 router.route("/").get(getAllUser).post(createUser);
 router.route("/:id").get(getUserById).put(updateUser).delete(deleteUser);

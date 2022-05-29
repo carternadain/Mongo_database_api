@@ -52,7 +52,7 @@ const thoughtController = {
       })
       .catch(err => res.json(err));
   },
-
+// delete a thought 
   deleteThought({ params }, res) {
     Thought.findOneAndDelete({ _id: params.id })
       .then((dbThoughtData) => {
@@ -60,10 +60,10 @@ const thoughtController = {
           return res.status(404).json({ message: "No thought with this id!" });
         }
 
-        // remove thought id from user's `thoughts` field
+        // remove the thought id from user area
         return User.findOneAndUpdate(
           { thoughts: params.id },
-          { $pull: { thoughts: params.id } }, //$pull removes from an existing values that match a specified condition.
+          { $pull: { thoughts: params.id } }, 
           { new: true }
         );
       })
@@ -71,14 +71,14 @@ const thoughtController = {
         if (!dbUserData) {
           return res
             .status(404)
-            .json({ message: "Thought created but no user with this id!" });
+            .json({ message: "the Thought was created but there's no user with this id!" });
         }
-        res.json({ message: "Thought successfully deleted!" });
+        res.json({ message: "Thought was successfully deleted!!" });
       })
       .catch((err) => res.json(err));
   },
 
-  // add reaction
+  // add reaction section
   addReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
@@ -95,7 +95,7 @@ const thoughtController = {
       .catch((err) => res.json(err));
   },
 
-  // delete reaction
+  // remove reaction area 
   removeReaction({ params }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
@@ -107,5 +107,5 @@ const thoughtController = {
   },
 };
 
-// export thought controller 
+// export the 'thought' controller 
 module.exports = thoughtController;
