@@ -6,7 +6,7 @@ const thoughtController = {
   getAllThought(req, res) {
     Thought.find({})
       .populate({
-        path: 'comments',
+        path: 'reactions',
         select: '-__v'
       })
       .select('-__v')
@@ -22,7 +22,7 @@ const thoughtController = {
   getThoughtById({ params }, res) {
     Thought.findOne({ _id: params.id })
       .populate({
-        path: 'comments',
+        path: 'reactions',
         select: '-__v'
       })
       .select('-__v')
@@ -34,13 +34,28 @@ const thoughtController = {
   },
 
   // create thought controller
-  createThought({ body }, res) {
+  createThought({ params, body }, res) {
     Thought.create(body)
-      .then(dbThoughtData => res.json(dbThoughtData))
-      .catch(err => res.json(err));
+      .then(({ _id }) => {
+        return User.findOneAndUpdate(
+          { _id: body.userId },
+          { $push: { thoughts: _id } },
+          { new: true }
+        );
+      })
+      .then((dbUserData) => {
+        if (!dbUserData) {
+          return res
+            .status(404)
+            .json({ message: "Thought created but no user with this id!" });
+        }
+
+        res.json({ message: "Thought successfully created!" });
+      })
+      .catch((err) => res.json(err));
   },
 
-  // update pizza by id
+  // update thought by id
   updateThought({ params, body }, res) {
     Thought.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
       .then(dbThoughtData => {
